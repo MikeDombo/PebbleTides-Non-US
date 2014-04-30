@@ -1,0 +1,91 @@
+
+<html>
+  <head>
+    <title>Non-US Tides Config</title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css' />
+    <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+    <script src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js'></script>
+  </head>
+  <body>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-4436865-9', 'mikedombrowski.com');
+  ga('send', 'pageview');
+
+</script>
+    <div data-role="page" id="main">
+      <div data-role="header" class="jqm-header">
+        <h1>Non-US Tides Config</h1>
+      </div>
+
+      <div data-role="content">
+<p>In order to find tides outside of the US you must copy and paste the exact location name from this website - <a href="http://tide-forecast.com">Tide-Forecast.com</a><br/>
+Copy the text after /locations/ and before /tides/latest from the URL<br/>If you enter it incorrectly tides cannot be fetched!</p>
+        <div data-role="fieldcontain">
+          <fieldset data-role="controlgroup">
+            <legend>Enter up to 7 Exact Location Names</legend>
+            <label for="name">Location 1:</label>
+			<input type="text" name="location1" id="location1"></input>
+			<label for="name">Location 2:</label>
+			<input type="text" name="location2" id="location2"></input>
+			<label for="name">Location 3:</label>
+			<input type="text" name="location3" id="location3"></input>
+			<label for="name">Location 4:</label>
+			<input type="text" name="location4" id="location4"></input>
+			<label for="name">Location 5:</label>
+			<input type="text" name="location5" id="location5"></input>
+			<label for="name">Location 6:</label>
+			<input type="text" name="location6" id="location6"></input>
+			<label for="name">Location 7:</label>
+			<input type="text" name="location7" id="location7"></input>
+            </fieldset>
+          </div>
+        </div>
+
+        <div class="ui-body ui-body-b">
+          <fieldset class="ui-grid-a">
+              <div class="ui-block-a"><button type="submit" data-theme="c" data-icon="delete" data-iconpos="left" id="cancel">Cancel</button></div>
+              <div class="ui-block-b"><button type="submit" data-theme="b" data-icon="check" data-iconpos="right" id="submit">Submit</button></div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function saveOptions() {
+        var options = {
+		  'location1': $("#location1").val(),
+          'location2': $("#location2").val(),
+		  'location3': $("#location3").val(),
+		  'location4': $("#location4").val(),
+		  'location5': $("#location5").val(),
+		  'location6': $("#location6").val(),
+		  'location7': $("#location7").val()
+        }
+        return options;
+      }
+
+      $().ready(function() {
+        $("#cancel").click(function() {
+          console.log("Cancel");
+          document.location = "pebblejs://close";
+        });
+
+        $("#submit").click(function() {
+          console.log("Submit");
+          var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(saveOptions()));
+          console.log("Warping to: " + location);
+          console.log(location);
+          document.location = location;
+        });
+
+      });
+    </script>
+  </body>
+</html>
