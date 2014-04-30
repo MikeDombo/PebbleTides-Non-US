@@ -1,3 +1,4 @@
+
 <html>
   <head>
     <title>Non-US Tides Config</title>
@@ -16,7 +17,6 @@
 
   ga('create', 'UA-4436865-9', 'mikedombrowski.com');
   ga('send', 'pageview');
-
 </script>
     <div data-role="page" id="main">
       <div data-role="header" class="jqm-header">
@@ -30,7 +30,7 @@ Copy the text after /locations/ and before /tides/latest from the URL<br/>If you
           <fieldset data-role="controlgroup">
             <legend>Enter up to 7 Exact Location Names</legend>
             <label for="name">Location 1:</label>
-			<input type="text" name="location1" id="location1"></input>
+			<input type="text" name="location1" id="location1" placeholder="Location 1"></input>
 			<label for="name">Location 2:</label>
 			<input type="text" name="location2" id="location2"></input>
 			<label for="name">Location 3:</label>
@@ -57,7 +57,15 @@ Copy the text after /locations/ and before /tides/latest from the URL<br/>If you
       </div>
     </div>
     <script>
-      function saveOptions() {
+    var options = location.search.slice(1).split("&");
+	$("#location1").val(options[0]);
+	$("#location2").val(options[1]);
+	$("#location3").val(options[2]);
+	$("#location4").val(options[3]);
+	$("#location5").val(options[4]);
+	$("#location6").val(options[5]);
+	$("#location7").val(options[6]);
+	  function saveOptions() {
         var options = {
 		  'location1': $("#location1").val(),
           'location2': $("#location2").val(),
