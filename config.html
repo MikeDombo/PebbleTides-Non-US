@@ -25,12 +25,13 @@
 
       <div data-role="content">
 <p>In order to find tides outside of the US you must copy and paste the exact location name from this website - <a href="http://tide-forecast.com">Tide-Forecast.com</a><br/>
-Copy the text after /locations/ and before /tides/latest from the URL<br/>If you enter it incorrectly tides cannot be fetched!</p>
+Copy the text after /locations/ and before /tides/latest from the URL (Including the dashes)<br/>If you enter it incorrectly tides cannot be fetched!
+<br/>Example: Washington-DC or Sydney or Berwick-Upon-Tweed</p>
         <div data-role="fieldcontain">
           <fieldset data-role="controlgroup">
             <legend>Enter up to 7 Exact Location Names</legend>
             <label for="name">Location 1:</label>
-			<input type="text" name="location1" id="location1" placeholder="Location 1"></input>
+			<input type="text" name="location1" id="location1"></input>
 			<label for="name">Location 2:</label>
 			<input type="text" name="location2" id="location2"></input>
 			<label for="name">Location 3:</label>
@@ -57,7 +58,18 @@ Copy the text after /locations/ and before /tides/latest from the URL<br/>If you
       </div>
     </div>
     <script>
+	var iPhon = false;
+	if(/iP([ao]d|hone)/.test(navigator.userAgent)){
+	iPhon=true;
+	}
     var options = location.search.slice(1).split("&");
+	options[0] = options[0].split("=")[1];
+	options[1] = options[1].split("=")[1];
+	options[2] = options[2].split("=")[1];
+	options[3] = options[3].split("=")[1];
+	options[4] = options[4].split("=")[1];
+	options[5] = options[5].split("=")[1];
+	options[6] = options[6].split("=")[1];
 	$("#location1").val(options[0]);
 	$("#location2").val(options[1]);
 	$("#location3").val(options[2]);
@@ -73,7 +85,8 @@ Copy the text after /locations/ and before /tides/latest from the URL<br/>If you
 		  'location4': $("#location4").val(),
 		  'location5': $("#location5").val(),
 		  'location6': $("#location6").val(),
-		  'location7': $("#location7").val()
+		  'location7': $("#location7").val(),
+		  'iPhone' : iPhon
         }
         return options;
       }
