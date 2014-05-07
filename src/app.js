@@ -1,7 +1,9 @@
 //setup global variables
-var version = "1.0.1";
+var version = "1.0.3";
 var printer;
-checkUpdates();
+if(localStorage.iPhone !== null && localStorage.iPhone === false){
+	checkUpdates();
+}
 
 //Check for updates
 function checkUpdates(){
@@ -155,6 +157,7 @@ function setUp(options){
 	localStorage.location5 = options.location5;
 	localStorage.location6 = options.location6;
 	localStorage.location7 = options.location7;
+	localStorage.iPhone = options.iPhone;
 	mainPage();
 }
 
@@ -162,7 +165,7 @@ function setUp(options){
 //Pebble Listeners
 //
 Pebble.addEventListener("showConfiguration", function(e) {
-	Pebble.openURL("http://mikedombrowski.com/pebbletides-config-non-us.html?"+localStorage.location1+"&"+localStorage.location2+"&"+localStorage.location3+"&"+localStorage.location4+"&"+localStorage.location5+"&"+localStorage.location6+"&"+localStorage.location7);
+	Pebble.openURL("http://mikedombrowski.com/pebbletides-config-non-us.html?loc1="+localStorage.location1+"&loc2="+localStorage.location2+"&loc3="+localStorage.location3+"&loc4="+localStorage.location4+"&loc5="+localStorage.location5+"&loc6="+localStorage.location6+"&loc7="+localStorage.location7);
 });
 Pebble.addEventListener("webviewclosed", function(e) {
 	var options = JSON.parse(decodeURIComponent(e.response));
