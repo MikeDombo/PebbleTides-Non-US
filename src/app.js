@@ -1,5 +1,5 @@
 //setup global variables
-var version = "1.0.4";
+var version = "1.0.5";
 var printer;
 if(localStorage.iPhone !== null && localStorage.iPhone === false){
 	checkUpdates();
@@ -55,7 +55,7 @@ function findTide(highs, lows, loc_name){
 	else {
 		possible_low = lows[lows.indexOf(currTime)+1];
 	}
-	if(Math.abs(possible_high)-currTime > Math.abs(possible_low-currTime)){
+	if(Math.abs(possible_high-currTime) > Math.abs(possible_low-currTime)){
 		tide = "Low tide";
 		tideTime = possible_low;
 	}
@@ -117,6 +117,7 @@ function getTides(location) {
 function setData(response, loc_name){
 	var high_tides = response.substring(response.indexOf("var high_tides = Array("), response.indexOf("var low_tides = Array("));
 	var low_tides = response.substring(response.indexOf("var low_tides = Array("), response.indexOf("var hrdiff"));
+	console.log(high_tides+" "+low_tides);
 	high_tides = high_tides.substring(23, high_tides.length-9);
 	high_tides = high_tides.split(", ");
 	low_tides = low_tides.substring(22, low_tides.length-9);
