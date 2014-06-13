@@ -1,11 +1,8 @@
 //setup global variables
-var version = "1.0.5";
-var printer;
-if(localStorage.iPhone !== null && localStorage.iPhone === false){
-	checkUpdates();
-}
+var version = "1.1.0";
+var currentConfigText = 'Current Configuration:\nLocation 1: '+localStorage.location1+'\nLocation 2: '+localStorage.location2+'\nLocation 3: '+localStorage.location3+'\nLocation 4: '+localStorage.location4+'\nLocation 5: '+localStorage.location5+'\nLocation 6: '+localStorage.location6+'\nLocation 7: '+localStorage.location7;
+checkUpdates(); //Check for updates
 
-//Check for updates
 function checkUpdates(){
 	var response;
 	var req = new XMLHttpRequest();
@@ -17,13 +14,16 @@ function checkUpdates(){
 			if(response[0]>current[0]){
 				localStorage.update = "true";
 			}
-			else if(response[1](19,20)>current[1]){
+			else if(response[1]>current[1] && response[0]==current[0]){
 				localStorage.update = "true";
 			}
-			else if(response[2]>current[2]){
+			else if(response[2]>current[2] && response[0]==current[0] && response[1]==current[1]){
 				localStorage.update =  "true";
 			}
-			else{localStorage.update = "false";}
+			else {
+				localStorage.update = "false";
+			}
+			console.log("update is "+localStorage.update);
 		}};
   req.open('GET', "http://mikedombrowski.com/pbtides-version-non-us");
   req.send(null);
@@ -95,9 +95,9 @@ function findTide(highs, lows, loc_name){
 		loc_name = loc_name.replace(/-/g,', ');
 		responseMessage = responseMessage + " in " +loc_name;
 //compile data to be written to screen and print it
-		printer = printer + responseMessage+"\n\n";
+		localStorage.printer = localStorage.printer + responseMessage+"\n\n";
 		simply.style("large");
-		simply.body(printer);
+		simply.body(localStorage.printer);
 }
 
 //Actually get the tides and package it to send to parseTide
@@ -128,8 +128,8 @@ function setData(response, loc_name){
 //Run it
 function runPos() {
 	if(localStorage.update == "true"){
-		printer = "A new update was found, please unload the app from your watch and reload\n\n";}
-	else{printer = "";}
+		localStorage.printer = "A new update was found, please unload the app from your watch and reload\n\n";}
+	else{localStorage.printer = "";}
 //Choose which locations to find tides for
 	if(localStorage.location1 !== "" && localStorage.location1 !== null){
 		getTides(localStorage.location1);
@@ -164,15 +164,18 @@ function setUp(options){
 	localStorage.location5 = options.location5;
 	localStorage.location6 = options.location6;
 	localStorage.location7 = options.location7;
-	localStorage.iPhone = options.iPhone;
-	mainPage();
+	localStorage.configText = options.configText;
+	localStorage.hourFormat = options.hourFormat;
+	if(localStorage.configText=="on")
+	{mainPage(currentConfigText+"\n\n");}
+	else{mainPage("");}
 }
 
 //
 //Pebble Listeners
 //
 Pebble.addEventListener("showConfiguration", function(e) {
-	Pebble.openURL("http://mikedombrowski.com/pebbletides-config-non-us.html?loc1="+localStorage.location1+"&loc2="+localStorage.location2+"&loc3="+localStorage.location3+"&loc4="+localStorage.location4+"&loc5="+localStorage.location5+"&loc6="+localStorage.location6+"&loc7="+localStorage.location7);
+	Pebble.openURL("http://mikedombrowski.com/pebbletides-config-non-us.html?loc1="+encodeURIComponent(localStorage.location1)+"&loc2="+encodeURIComponent(localStorage.location2)+"&loc3="+encodeURIComponent(localStorage.location3)+"&loc4="+encodeURIComponent(localStorage.location4)+"&loc5="+encodeURIComponent(localStorage.location5)+"&loc6="+encodeURIComponent(localStorage.location6)+"&loc7="+encodeURIComponent(localStorage.location7)+"&configText="+localStorage.configText+"&hourFormat="+localStorage.hourFormat);
 });
 Pebble.addEventListener("webviewclosed", function(e) {
 	var options = JSON.parse(decodeURIComponent(e.response));
@@ -187,12 +190,14 @@ simply.on('singleClick', function(e) {
 	if(e.button == "select"){
 		runPos();}
 });
-mainPage();
-function mainPage(){
+if(localStorage.configText=="on")
+{mainPage(currentConfigText+"\n\n");}
+else{mainPage("");}
+
+function mainPage(configText){
 	simply.scrollable(true);
 	simply.style("small");
 	simply.setText({
 		title: 'Pebble Tides',
-		body: 'Press \'Select\' to Get Tides.\n\nCurrent Configuration:\nlocation 1: '+localStorage.location1+'\nlocation 2: '+localStorage.location2+'\nlocation 3: '+localStorage.location3+'\nlocation 4: '+localStorage.location4+'\nlocation 5: '+localStorage.location5+'\nlocation 6: '+localStorage.location6+'\nlocation 7: '+localStorage.location7+
-		'\n\nBy Michael Dombrowski\nMikeDombrowski.com\n\nVersion '+version,}, true);
+		body: 'Press \'Select\' to Get Tides.\n\n'+configText+'By Michael Dombrowski\nMikeDombrowski.com\n\nVersion '+version+'\n\n'+localStorage.printer,}, true);
 }
