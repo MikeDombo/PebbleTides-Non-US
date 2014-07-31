@@ -1,5 +1,5 @@
 //setup global variables
-var version = "1.1.0";
+var version = "1.1.1";
 var currentConfigText = 'Current Configuration:\nLocation 1: '+localStorage.location1+'\nLocation 2: '+localStorage.location2+'\nLocation 3: '+localStorage.location3+'\nLocation 4: '+localStorage.location4+'\nLocation 5: '+localStorage.location5+'\nLocation 6: '+localStorage.location6+'\nLocation 7: '+localStorage.location7;
 checkUpdates(); //Check for updates
 
@@ -198,6 +198,6 @@ function mainPage(configText){
 	simply.scrollable(true);
 	simply.style("small");
 	simply.setText({
-		title: 'Pebble Tides',
+		title: 'Tide Aware',
 		body: 'Press \'Select\' to Get Tides.\n\n'+configText+'By Michael Dombrowski\nMikeDombrowski.com\n\nVersion '+version+'\n\n'+localStorage.printer,}, true);
 }
