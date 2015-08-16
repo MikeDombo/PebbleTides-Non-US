@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <title>Non-US Tides Config</title>
@@ -6,6 +5,8 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' href='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css' />
     <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
     <script src='http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js'></script>
   </head>
   <body>
@@ -24,15 +25,9 @@
       </div>
 
       <div data-role="content">
-<p>In order to find tides outside of the US you must copy and paste the exact location name from this website - <a href="http://tide-forecast.com">Tide-Forecast.com</a><br/>
-Copy the text after /locations/ and before /tides/latest from the URL (Including the dashes)<br/>If you enter it incorrectly tides cannot be fetched!
-<br/>Example: Washington-DC or Sydney or Berwick-Upon-Tweed</p>
+<p>In order to find tides outside of the US start typing the location that you want in any of the boxes. Once you find the location that you want, tap it, sometimes twice. Once the suggestion box disappears, it has been accepted.
+If you cannot find the location that you are looking for, check this website: <a href='http://www.tide-forecast.com/countries'>http://www.tide-forecast.com/countries</a> then enter the name of the closest location.</p>
         <div data-role="fieldcontain">
-		  <label for="configText">Show the Current Configuration on the App ?</label>
-          <select name="configText" id="configText" data-role="slider">
-            <option value="off">Off</option>
-            <option value="on">On</option>
-          </select>
 		  <label for="hourFormat">What Time Format Do You Prefer?</label>
           <select name="hourFormat" id="hourFormat" data-role="slider">
             <option value="12h">12h</option>
@@ -62,71 +57,84 @@ Copy the text after /locations/ and before /tides/latest from the URL (Including
 
         <div class="ui-body ui-body-b">
           <fieldset class="ui-grid-a">
-              <div class="ui-block-a"><button type="submit" data-theme="c" data-icon="delete" data-iconpos="left" id="cancel">Cancel</button></div>
-              <div class="ui-block-b"><button type="submit" data-theme="b" data-icon="check" data-iconpos="right" id="submit">Submit</button></div>
+              <div class="ui-block-a"><button type="submit" data-theme="c" onclick="cancel()" data-icon="delete" data-iconpos="left" id="cancel">Cancel</button></div>
+              <div class="ui-block-b"><button type="submit" data-theme="b" onclick="submit()" data-icon="check" data-iconpos="right" id="submit">Submit</button></div>
             </fieldset>
           </div>
         </div>
       </div>
     </div>
     <script>
-    var options = location.search.slice(1).split("&");
-	options[0] = options[0].split("=")[1];
-	options[1] = options[1].split("=")[1];
-	options[2] = options[2].split("=")[1];
-	options[3] = options[3].split("=")[1];
-	options[4] = options[4].split("=")[1];
-	options[5] = options[5].split("=")[1];
-	options[6] = options[6].split("=")[1];
-	options[7] = options[7].split("=")[1];
-	options[8] = options[8].split("=")[1];
-	for(option in options){
-	options[option] = decodeURIComponent(options[option]);
+	var locations = {};
+	var data3 = new Array();
+	function getPageFromID(locid, i, name){
+		$.getJSON('http://anyorigin.com/dev/get?url=http%3A//www.tide-forecast.com/locations/catch%3Floc_id%3D'+locid+'&callback=?', function(data){
+			var lookupname = data.contents.substring(data.contents.indexOf('<span>Tide Times</span><a href="/locations/')+43,data.contents.indexOf('/forecasts/latest'));
+			console.log(lookupname);
+			locations[i] = {displayName: name, lookupName: lookupname};
+			console.log(locations);
+			console.log(encodeURIComponent(JSON.stringify(locations)));
+		});
 	}
-	for(loc in options){
-		if(options[loc]===null || options[loc]=="undefined" || options[loc] == "null"){
-		options[loc]="";
+
+	$("#location1, #location2, #location3, #location4, #location5, #location6, #location7").autocomplete({source:function(request, response){var loc = request.term; $.getJSON('http://anyorigin.com/dev/get?url=http%3A//www.tide-forecast.com/locations/ac_location_name%3Fquery%3D'+loc+'&callback=?', function(data){
+		var data1 = eval(data.contents);
+		var data2 = new Array();
+		$.each(data1, function(i,v){if(v[2] != "" && v[2] != null){data2[i] = v[1]+", "+v[2];} else {data2[i]=v[1];} data3[i]= v;});
+		response(data2);});},
+		select: function(event, ui){
+			var index = event.target.id;
+			$.each(data3, function(i,v){var name = v[1]+", "+v[2]; if(name.indexOf(ui.item.value)>=0){getPageFromID(v[0], index, name);}});
+			}
+		});
+	
+	var query = location.search.substring(1);
+	var vars = query.split('&');
+	var options = JSON.parse(decodeURIComponent(vars[0].split("=")[1]));
+	$("#hourFormat").val(options.hourFormat);
+	for(var i=1; i<8; i++){
+		if(typeof options["location"+i] != "undefined"){
+			$("#location"+i).val(options['location'+i].displayName);
+			locations['location'+i] = {displayName: options['location'+i].displayName, lookupName: options['location'+i].lookupName};
+		}
+		else {locations['location'+i] = {displayName: "", lookupName: ""};}
+	}
+	locations['hourFormat'] = options.hourFormat;
+	
+	function saveOptions(){
+	for(var i=1; i<8; i++){
+		if($("#location"+i).val() == ""){
+			locations["location"+i] = {displayName: "", lookupName: ""};
 		}
 	}
-	$("#location1").val(options[0]);
-	$("#location2").val(options[1]);
-	$("#location3").val(options[2]);
-	$("#location4").val(options[3]);
-	$("#location5").val(options[4]);
-	$("#location6").val(options[5]);
-	$("#location7").val(options[6]);
-	$("#configText").val(options[8]);
-	$("#hourFormat").val(options[9]);
-	  function saveOptions() {
-        var options = {
-		  'location1': $("#location1").val(),
-          'location2': $("#location2").val(),
-		  'location3': $("#location3").val(),
-		  'location4': $("#location4").val(),
-		  'location5': $("#location5").val(),
-		  'location6': $("#location6").val(),
-		  'location7': $("#location7").val(),
-		  'configText': $("#configText").val(),
-		  'hourFormat': $("#hourFormat").val()
-        }
-        return options;
-      }
-
-      $().ready(function() {
-        $("#cancel").click(function() {
-          console.log("Cancel");
-          document.location = "pebblejs://close";
-        });
-
-        $("#submit").click(function() {
-          console.log("Submit");
-          var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(saveOptions()));
-          console.log("Warping to: " + location);
-          console.log(location);
-          document.location = location;
-        });
-
-      });
+	locations['hourFormat'] = $("#hourFormat").val();
+	return locations;
+	}
+	// Get query variables
+	function getQueryParam(variable, defaultValue) {
+	  // Find all URL parameters
+	  var query = location.search.substring(1);
+	  var vars = query.split('&');
+	  for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		// If the query variable parameter is found, decode it to use and return it for use
+		if (pair[0] === variable) {
+		  return decodeURIComponent(pair[1]);
+			}
+		}
+		  return defaultValue || false;
+	}
+	function cancel() {
+		console.log("Cancel");
+		document.location = getQueryParam('return_to', 'pebblejs://close#');}
+	function submit(){
+		console.log("Submit");
+		var return_to = getQueryParam('return_to', 'pebblejs://close#');
+		var location = return_to + encodeURIComponent(JSON.stringify(saveOptions()));
+		console.log("Warping to: " + location);
+		console.log(location);
+		document.location = location;
+	}
     </script>
   </body>
 </html>
