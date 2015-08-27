@@ -40,7 +40,7 @@
     "shortName": "Tide Aware (Non-US)",
     "uuid": "4b7389e1-70ae-45bd-a400-aff9d02b5b04",
     "versionCode": 1,
-    "versionLabel": "2.9",
+    "versionLabel": "2.10",
     "watchapp": {
         "hiddenApp": false,
         "watchface": false

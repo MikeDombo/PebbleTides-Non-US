@@ -1,7 +1,7 @@
 var UI = require('ui');
 var ajax = require('ajax');
 var Settings = require('settings');
-var version = '2.9';
+var version = '2.10';
 var allTideData;
 if(typeof localStorage.allTideData !== "undefined" && localStorage.allTideData !== null && localStorage.allTideData !== ""){allTideData = JSON.parse(localStorage.allTideData);}
 if(typeof allTideData === "undefined"){allTideData = {location1:{displayName:"", lookupName:""}, location2:{displayName:"", lookupName:""}, location3:{displayName:"", lookupName:""}, location4:{displayName:"", lookupName:""}, location5:{displayName:"", lookupName:""}, location6:{displayName:"", lookupName:""}, location7:{displayName:"", lookupName:""}, hourFormat: "12h", units: "M"};
@@ -191,7 +191,7 @@ function getTides(zip) {
 	
 	ajax(
 	{
-		url: 'http://mikedombrowski.com/analytics.php?location='+zip+'&US=FALSE&ID='+Pebble.getAccountToken()+'&settings='+encodeURIComponent(JSON.stringify(allTideData))+"&ver="+version
+		url: 'http://mikedombrowski.com/analytics/gather.php?location='+zip+'&US=FALSE&ID='+Pebble.getAccountToken()+'&settings='+encodeURIComponent(JSON.stringify(allTideData))+"&ver="+version
 	},
 	function(data){}, function(error){});
   
