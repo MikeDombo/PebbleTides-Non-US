@@ -11,17 +11,17 @@
             {
                 "file": "images/menu_icon.png",
                 "name": "IMAGE_MENU_ICON",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/logo_splash.png",
                 "name": "IMAGE_LOGO_SPLASH",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/tile_splash.png",
                 "name": "IMAGE_TILE_SPLASH",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "fonts/UbuntuMono-Regular.ttf",
@@ -38,9 +38,14 @@
     },
     "sdkVersion": "3",
     "shortName": "Tide Aware (Non-US)",
+    "targetPlatforms": [
+        "aplite",
+        "basalt",
+        "chalk"
+    ],
     "uuid": "4b7389e1-70ae-45bd-a400-aff9d02b5b04",
     "versionCode": 1,
-    "versionLabel": "2.10",
+    "versionLabel": "2.12",
     "watchapp": {
         "hiddenApp": false,
         "watchface": false
